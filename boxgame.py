@@ -5,23 +5,39 @@ SCREEN_HEIGHT = 1000
 TITLE = "BoxGame"
 
 class Wall(arcade.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, r, a, b):
         super().__init__("images/wall.png")
-        self.center_x=x
-        self.center_y=y
+        self.center_x = x
+        self.center_y = y
+        self.angle = r
+        self.velocity = [a, b]
+        self.boundary_bottom = 0
+        self.boundary_top = SCREEN_HEIGHT
+        self.boundary_left = 0
+        self.boundary_right = SCREEN_WIDTH
+
+    def update_velocity(self, a, b):
+        self.velocity = [a, b]
 
     def update(self):
-        pass
+        self.center_x += self.velocity[0]
+        self.center_y += self.velocity[1]
+
 
 class Box(arcade.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, a, b):
         super().__init__("images/box.png")
-        self.scale=.5
-        self.center_x=x
-        self.center_y=y
+        self.scale = .5
+        self.center_x = x
+        self.center_y = y
+        self.velocity = [a, b]
+
+    def update_velocity(self, a, b):
+        self.velocity = [a, b]
 
     def update(self):
-        pass
+        self.center_x += self.velocity[0]
+        self.center_y += self.velocity[1]
 
 class MenuView(arcade.View):
     def on_show(self):
@@ -40,18 +56,31 @@ class GameView(arcade.View):
     def __init__(self):
         super().__init__()
 
-        self.time_taken=0
-        self.box_list = arcade.SpriteList
-        self.wall_list = arcade.SpriteList
-        self.finish_list = arcade.SpriteList
-
-    def setup(self):
-        self.wall_list.append(Wall(500,500))
+        self.time_taken = 0
+        self.box_list = arcade.SpriteList()
+        self.wall_list = arcade.SpriteList()
+        self.finish_list = arcade.SpriteList()
+        self.wall_list.append(Wall(200, 300, 90, 5, 1))
+        self.wall_list.append(Wall(200, 300, 0, 1, 1))
+        self.box_list.append(Box(600, 400, 0, 0))
 
     def on_draw(self):
         arcade.start_render()
         self.wall_list.draw()
-        Box(200,300).draw()
+        self.box_list.draw()
+
+    def on_update(self, delta_time):
+        self.wall_list.update()
+        self.box_list.update()
+        for i in self.wall_list:
+            if arcade.check_for_collision(self.box_list[0], i):
+                [a, b] = i.velocity
+                [c, d] = self.box_list[0].velocity
+                i.update_velocity(c, d)
+                self.box_list[0].update_velocity(a, b)
+
+
+
 
 
 
