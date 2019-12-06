@@ -7,6 +7,15 @@ LEVEL = 1
 
 class Wall(arcade.Sprite):
     def __init__(self, x, y, r, a, b, c):
+        '''
+
+        :param x: center_x
+        :param y: center_y
+        :param r: angle
+        :param a: x velocity
+        :param b: y velocity
+        :param c: scale
+        '''
         super().__init__("images/wall.png")
         self.center_x = x
         self.center_y = y
@@ -25,15 +34,35 @@ class Wall(arcade.Sprite):
         self.original_y = self.center_y
 
     def change_x(self, a):
+        '''
+
+        :param a: amount to change by
+        :return: changes x
+        '''
         self.center_x = a
 
     def change_y(self, a):
+        '''
+
+        :param a: amount to change by
+        :return: changes y
+        '''
         self.center_y = a
 
     def update_velocity(self, a, b):
+        '''
+
+        :param a: amount to change x velocity
+        :param b: amount to change y velocity
+        :return: changes velocity
+        '''
         self.velocity = [a, b]
 
     def update(self):
+        '''
+
+        :return: new position
+        '''
         self.center_x += self.velocity[0]
         self.center_y += self.velocity[1]
         if self.left < self.boundary_left or self.right > self.boundary_right or self.bottom < self.boundary_bottom or self.top > self.boundary_top:
@@ -44,6 +73,14 @@ class Wall(arcade.Sprite):
 
 class Box(arcade.Sprite):
     def __init__(self, x, y, a, b, c):
+        '''
+
+        :param x: center_x
+        :param y: center_y
+        :param a: x velocity
+        :param b: y velocity
+        :param c: scale
+        '''
         super().__init__("images/box2.png")
         self.scale = .5
         self.center_x = x
@@ -60,15 +97,35 @@ class Box(arcade.Sprite):
         self.top = self.center_y + (64 * self.scale)
 
     def update_velocity(self, a, b):
+        '''
+
+        :param a: changes x velocity by a
+        :param b: changes y velocity by a
+        :return: new velocity
+        '''
         self.velocity = [a, b]
 
     def change_x(self, a):
+        '''
+
+        :param a: amount to change x by
+        :return: changes x
+        '''
         self.center_x = a
 
     def change_y(self, a):
+        '''
+
+        :param a: amount to change y by
+        :return: changes y
+        '''
         self.center_y = a
 
     def update(self):
+        '''
+
+        :return: new position
+        '''
         self.center_x += self.velocity[0]
         self.center_y += self.velocity[1]
         if self.left < self.boundary_left or self.right > self.boundary_right or self.bottom < self.boundary_bottom or self.top > self.boundary_top:
@@ -83,6 +140,9 @@ class Box(arcade.Sprite):
             self.center_y = SCREEN_HEIGHT-(64*self.scale)
 
 class MenuView(arcade.View):
+    '''
+    Menu View
+    '''
     def on_show(self):
         arcade.set_background_color(arcade.color.WHITE)
 
@@ -96,6 +156,9 @@ class MenuView(arcade.View):
         self.window.show_view(next_view)
 
 class LevelView(arcade.View):
+    '''
+    Level intros
+    '''
     def __init__(self, a):
         super().__init__()
 
@@ -132,6 +195,9 @@ class LevelView(arcade.View):
 
 
 class GameView(arcade.View):
+    '''
+    View for all 3 levels
+    '''
     def __init__(self, a):
         super().__init__()
 
@@ -221,6 +287,9 @@ class GameView(arcade.View):
                 self.box_list[0].update_velocity(a, b)
 
 class EndView(arcade.View):
+    '''
+    Finished game view
+    '''
     def on_show(self):
         arcade.set_background_color(arcade.color.WHITE)
 
